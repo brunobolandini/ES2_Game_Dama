@@ -1,0 +1,13 @@
+table {
+    border: 0;
+}
+td {
+    height: 40px;
+    width: 40px;
+}
+.a {
+    background-color: white;
+  }
+.b {
+    background-color: red;
+}

@@ -1,9 +1,12 @@
+# coding: utf-8
+
 # Tabuleiro do jogo. Precisa de uma altura e uma largura para ser instanciado
 
 class tabuleiro(object):
     PRETA = 1
     BRANCA = 0
     ND = -1
+
     def __init__(self, altura, largura, primeiroJogador):
         """
             Monta o tauleiro, profundidade eh estaticamente atribuida
@@ -20,7 +23,7 @@ class tabuleiro(object):
         for i in range(largura):
             self.lista_das_pretas.append((i, i % 2))
             self.lista_das_brancas.append((i, altura - (i % 2) - 1))
-            if(largura==8)and(i==0):
+            if (largura == 8) and (i == 0):
                 self.lista_das_brancas.append((i, 5))
                 self.lista_das_brancas.append((2, 5))
                 self.lista_das_brancas.append((4, 5))
@@ -32,7 +35,7 @@ class tabuleiro(object):
 
         # estado_tabuleiro guarda o estado atual do tabuleiro para printar e para avaliar
         self.estado_tabuleiro = [[' '] * self.largura for x in range(self.altura)]
-        self.jogo_vencido = self.ND
+        self.jogoGanho = self.ND
         self.vez = primeiroJogador
         self.pronfundidade_maxima = 10
 
@@ -44,7 +47,7 @@ class tabuleiro(object):
         for peca in self.lista_das_brancas:
             for jogada in self.iter_pecas_brancas(peca):
                 yield jogada
-                
+
     def iter_jogadas_pretas(self):
         """
             Generator das jogadas para pecas brancas
@@ -52,13 +55,13 @@ class tabuleiro(object):
         for peca in self.lista_das_pretas:
             for jogadas in self.iter_pecas_pretas(peca):
                 yield jogadas
-                
+
     def iter_pecas_brancas(self, peca):
         """
             Gera as jogadas possiveis para as pecas brancas
-        """            
+        """
         return self.iter_jogadas(peca, ((-1, -1), (1, -1)))
-    
+
     def iter_pecas_pretas(self, peca):
         """
             Gera as jogadas possiveis para as pecas pretas
@@ -108,7 +111,7 @@ class tabuleiro(object):
                 branca = pulo in self.lista_das_brancas
                 if not preta and not branca:
                     yield (peca, pulo, self.vez)
-    
+
     def atualiza_tabuleiro(self):
         """
             Atualiza o array que tem o tabuleiro para representar o estado das pecas no tabuleiro
@@ -134,10 +137,10 @@ class tabuleiro(object):
             self.lista_das_pretas[self.lista_das_pretas.index(move_de)] = move_para
             self.atualiza_tabuleiro()
             self.vez = self.BRANCA
-            self.jogo_vencido = ganha_perde
+            self.jogoGanho = ganha_perde
         else:
             raise Exception
-        
+
     def joga_branca_sem_printar(self, move_de, move_para, ganha_perde):
         """
             Mova peca branca sem printar
@@ -150,10 +153,10 @@ class tabuleiro(object):
             self.lista_das_brancas[self.lista_das_brancas.index(move_de)] = move_para
             self.atualiza_tabuleiro()
             self.vez = self.PRETA
-            self.jogo_vencido = ganha_perde
+            self.jogoGanho = ganha_perde
         else:
             raise Exception
-    
+
     def move_preta(self, move_de, move_para, ganha_perde):
         """
             Move a peca preta de uma casa pra outra
@@ -161,10 +164,9 @@ class tabuleiro(object):
         """
         self.joga_sem_printar(move_de, move_para, ganha_perde)
         self.printa_tabuleiro()
-        
+
     def move_branca(self, move_de, move_para, ganha_perde):
         """
-
             Move a peca branca de uma casa pra outra
             ganha_perde e passado como 0 (se branca) ou 1 (se preta) se o movimento e um pulo
         """
@@ -176,7 +178,7 @@ class tabuleiro(object):
             Printa o tabuleiro no console
         """
         print unicode(self)
-        
+
     def __unicode__(self):
         """
             Guarda o unicode e outro estado do tabuleiro para printar o tabuleiro
@@ -192,7 +194,7 @@ class tabuleiro(object):
 
         # Printa as linhas do tabuleiro
         for num, linha in enumerate(self.estado_tabuleiro[:-1]):
-            linhas.append(chr(num+65) + u' │ ' + u' │ '.join(linha) + u' │')
+            linhas.append(chr(num + 65) + u' │ ' + u' │ '.join(linha) + u' │')
             linhas.append(u'  ├' + (u'───┼' * (self.largura - 1)) + u'───┤')
 
         # Printa a ultima linha
